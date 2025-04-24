@@ -1,6 +1,41 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { login as apiLogin, register as apiRegister } from '../services/api';
+import { loginUser as apiLogin, registerUser as apiRegister } from '../services/api';
 import axios from 'axios';
+import { spaces } from '../mockData';
+
+// Create axios instance with base URL
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000/api',
+});
+
+// Add auth token to requests
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Authentication APIs
+export const login = (credentials) => {
+  return api.post('/login', credentials);
+};
+
+export const register = (userData) => {
+  return api.post('/register', userData);
+};
+
+
+export const getSpaces = (filters) => {
+  // For development with mock data
+  return Promise.resolve({
+    data: spaces
+  });
+  
+  // For production
+  // return api.get('/spaces', { params: filters });
+};
 
 const AuthContext = createContext();
 
