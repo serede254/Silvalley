@@ -2,7 +2,7 @@ import axios from 'axios';
 import { spaces } from '../mockData';
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000/api',
 });
 
 // Add auth token to requests
@@ -15,21 +15,21 @@ api.interceptors.request.use((config) => {
 });
 
 // Authentication APIs
-export const login = (credentials) => {
-  return api.post('/auth/login', credentials);
+export const registerUser = (userData) => {
+  return api.post('/register', userData);
 };
 
-export const register = (userData) => {
-  return api.post('/auth/register', userData);
+export const loginUser = (credentials) => {
+  return api.post('/login', credentials);
 };
 
-// User APIs
-export const getUserProfile = () => {
-  return api.get('/users/profile');
-};
-
-export const updateUserProfile = (userData) => {
-  return api.put('/users/profile', userData);
+export const updateUserProfile = async (userData) => {
+  try {
+    const response = await axios.put('/api/users/profile', userData);
+    return response;
+  } catch (error) {
+    throw error;
+  }
 };
 
 // Space APIs
